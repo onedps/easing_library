@@ -156,22 +156,19 @@ function easing_lib:animate(property, target, speed, easing, callback)
 	local easing_id = #self.active_easings + 1
 
 	local connection
-	
-	task.spawn(function()
-		connection = game:GetService("RunService").Heartbeat:Connect(function()
-			local progress = math.min((tick() - start_time) / speed, 1)
-			local eased = ease(progress)
+	connection = game:GetService("RunService").Heartbeat:Connect(function()
+		local progress = math.min((tick() - start_time) / speed, 1)
+		local eased = ease(progress)
 
-			self.Object[property] = interpolate(start_value, target, eased)
+		self.Object[property] = interpolate(start_value, target, eased)
 
-			if progress >= 1 then
-				connection:Disconnect()
-				self.active_easings[easing_id] = nil
-				if callback then callback() end
-			end
-		end)
+		if progress >= 1 then
+			connection:Disconnect()
+			self.active_easings[easing_id] = nil
+			if callback then callback() end
+		end
 	end)
-
+	
 	self.active_easings[easing_id] = connection
 	return easing_id
 end
@@ -192,3 +189,4 @@ function easing_lib:cancel_all()
 end
 
 return easing_lib
+
