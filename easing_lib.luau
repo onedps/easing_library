@@ -1,7 +1,6 @@
 local easing_lib = {}
 easing_lib.__index = easing_lib
 
--- все методы взяты с easings.net 
 local bounce_out = function(t)
 	if t < 1 / 2.75 then return 7.5625 * t * t
 	elseif t < 2 / 2.75 then t = t - 1.5 / 2.75 return 7.5625 * t * t + 0.75
@@ -142,24 +141,15 @@ function easing_lib.new(obj: any)
 	return setmetatable({object = obj, active_easings = {}}, easing_lib)
 end
 
-function easing_lib:animate(target: any, speed: number, easing: ease_method, callback: any)
-	local start_values = {}
-	local value_types = {}
-	local interpolators = {}
+function easing_lib:animate(property: string, target: any, speed: number, easing: ease_method, callback: any)
+	local start_value = self.object[property]
+	local value_type = typeof(start_value)
+	local interpolate = types[value_type]
 
-	for property, target_value in pairs(target) do
-		local start_value = self.object[property]
-		local value_type = typeof(start_value)
-		local interpolate = types[value_type]
-
-		if interpolate then
-			start_values[property] = start_value
-			value_types[property] = value_type
-			interpolators[property] = interpolate
-		else
-			warn("Unsupported type for property: " .. property .. ": " .. value_type)
-			target[property] = nil
-		end
+	if not interpolate then
+		warn("Unsupported type: " .. value_type)
+		if callback then callback() end
+		return
 	end
 
 	local ease = methods[easing] or methods.linear
@@ -171,9 +161,7 @@ function easing_lib:animate(target: any, speed: number, easing: ease_method, cal
 		local progress = math.min((tick() - start_time) / speed, 1)
 		local eased = ease(progress)
 
-		for property, interpolate in pairs(interpolators) do
-			self.object[property] = interpolate(start_values[property], target[property], eased)
-		end
+		self.object[property] = interpolate(start_value, target, eased)
 
 		if progress >= 1 then
 			connection:Disconnect()
@@ -185,7 +173,6 @@ function easing_lib:animate(target: any, speed: number, easing: ease_method, cal
 	self.active_easings[easing_id] = connection
 	return easing_id
 end
-
 
 function easing_lib:cancel(easing_id: number)
 	if self.active_easings[easing_id] then
