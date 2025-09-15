@@ -12,7 +12,7 @@ local bounce_in = function(t)
 	return 1 - bounce_out(1 - t)
 end
 
-local easing_methods = {
+local methods = {
 	linear = function(t)
 		return t
 	end,
@@ -120,7 +120,9 @@ local easing_methods = {
 	end,
 }
 
-local easing_types = {
+export type ease_method = "linear" | "quad_in" | "quad_out" | "quad_in_out" | "cubic_in" | "cubic_out" | "cubic_in_out" | "quart_in" | "quart_out" | "quart_in_out" | "quint_in" | "quint_out" | "quint_in_out" | "sine_in" | "sine_out" | "sine_in_out" | "expo_in" | "expo_out" | "expo_in_out" | "circ_in" | "circ_out" | "circ_in_out" | "back_in" | "back_out" | "back_in_out" | "elastic_in" | "elastic_out" | "elastic_in_out" | "bounce_in" | "bounce_out" | "bounce_in_out"
+
+local types = {
 	number = function(a, b, t) return a + (b - a) * t end,
 	UDim2 = function(a, b, t)
 		return UDim2.new(
@@ -136,22 +138,31 @@ local easing_types = {
 	CFrame = function(a, b, t) return a:Lerp(b, t) end
 }
 
-function easing_lib.new(object)
-	return setmetatable({Object = object, active_easings = {}}, easing_lib)
+function easing_lib.new(obj: any)
+	return setmetatable({object = obj, active_easings = {}}, easing_lib)
 end
 
-function easing_lib:animate(property, target, speed, easing, callback)
-	local start_value = self.Object[property]
-	local value_type = typeof(start_value)
-	local interpolate = easing_types[value_type]
+function easing_lib:animate(target: any, speed: number, easing: ease_method, callback: any)
+	local start_values = {}
+	local value_types = {}
+	local interpolators = {}
 
-	if not interpolate then
-		warn("Unsupported type: " .. value_type)
-		if callback then callback() end
-		return
+	for property, target_value in pairs(target) do
+		local start_value = self.object[property]
+		local value_type = typeof(start_value)
+		local interpolate = types[value_type]
+
+		if interpolate then
+			start_values[property] = start_value
+			value_types[property] = value_type
+			interpolators[property] = interpolate
+		else
+			warn("Unsupported type for property: " .. property .. ": " .. value_type)
+			target[property] = nil
+		end
 	end
-	
-	local ease = easing_methods[easing] or easing_methods.linear
+
+	local ease = methods[easing] or methods.linear
 	local start_time = tick()
 	local easing_id = #self.active_easings + 1
 
@@ -160,7 +171,9 @@ function easing_lib:animate(property, target, speed, easing, callback)
 		local progress = math.min((tick() - start_time) / speed, 1)
 		local eased = ease(progress)
 
-		self.Object[property] = interpolate(start_value, target, eased)
+		for property, interpolate in pairs(interpolators) do
+			self.object[property] = interpolate(start_values[property], target[property], eased)
+		end
 
 		if progress >= 1 then
 			connection:Disconnect()
@@ -168,13 +181,13 @@ function easing_lib:animate(property, target, speed, easing, callback)
 			if callback then callback() end
 		end
 	end)
-	
+
 	self.active_easings[easing_id] = connection
 	return easing_id
 end
 
 
-function easing_lib:cancel(easing_id)
+function easing_lib:cancel(easing_id: number)
 	if self.active_easings[easing_id] then
 		self.active_easings[easing_id]:Disconnect()
 		self.active_easings[easing_id] = nil
@@ -182,11 +195,10 @@ function easing_lib:cancel(easing_id)
 end
 
 function easing_lib:cancel_all()
-	for _, connection in pairs(self.active_easings) do
-		connection:Disconnect()
+	for _, connects in pairs(self.active_easings) do
+		connects:Disconnect()
 	end
 	self.active_easings = {}
 end
 
 return easing_lib
-
