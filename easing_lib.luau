@@ -126,6 +126,7 @@ local methods = {
 }
 
 export type ease_method = "linear" | "quad_in" | "quad_out" | "quad_in_out" | "cubic_in" | "cubic_out" | "cubic_in_out" | "quart_in" | "quart_out" | "quart_in_out" | "quint_in" | "quint_out" | "quint_in_out" | "sine_in" | "sine_out" | "sine_in_out" | "expo_in" | "expo_out" | "expo_in_out" | "circ_in" | "circ_out" | "circ_in_out" | "back_in" | "back_out" | "back_in_out" | "elastic_in" | "elastic_out" | "elastic_in_out" | "bounce_in" | "bounce_out" | "bounce_in_out"
+export type target_type = Vector3 | Color3 | ColorSequence | CFrame | UDim2 | number | Vector2
 
 local types = {
 	number = function(a: number, b: number, t: number): number return a + (b - a) * t end,
@@ -155,7 +156,7 @@ local types = {
 
 local active_easings = {}
 
-function easing_lib.animate(object: Object, property: string, target: any, duration: number, easing: ease_method, callback: any)
+function easing_lib.animate(object: Object, property: string, target: target_type, duration: number, easing: ease_method, callback: any)
 	local start_value = object[property]
 	local value_type = typeof(start_value)
 	local interpolate = types[value_type]
