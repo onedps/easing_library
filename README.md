@@ -9,6 +9,4 @@ https://github.com/user-attachments/assets/0c48be8a-9c33-4641-b2b7-4f596d740a24
 ## Documentation:
 ### Functions: 
 #### **easing.animate**
-```luau
-easing.animate(object: Object, property: string, target: any, duration: number, easing: ease_method, callback: callback)
-```
+`easing.animate(object: Object, property: string, target: any, duration: number, easing: ease_method, callback: callback)`
