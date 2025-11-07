@@ -161,12 +161,6 @@ function easing_lib.animate(object: Object, property: string, target: target_typ
 	local value_type = typeof(start_value)
 	local interpolate = types[value_type]
 
-	if not interpolate then
-		warn("Unsupported type: " .. value_type)
-		if callback then callback() end
-		return
-	end
-
 	local ease = methods[easing] or methods.linear
 	local anim_id = #active_easings + 1
 	local progress = 0
