@@ -1,5 +1,4 @@
 # Easing Library
-
 ### Animation library that can change default tweenservice.
 
 ## 
