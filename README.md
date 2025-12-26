@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/604a4824-26bc-4517-95b2-a37eb3deb2bb
 
 #### easing.animate
 
-`easing.animate(object: Object, property: string, target: target_type, duration: number, easing: ease_method, callback: callback)`
+`easing.animate(object: Object, property: string, target: {Vector2, Vector3, Color3, UDim2, ColorSequence, CFrame, number}, duration: number, easing: {method: method, direction: direction}, callback: callback)`
 
 Argument | Type | Description | Example
 -------- | ---- | ----------- | ------- 
