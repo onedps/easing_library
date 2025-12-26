@@ -30,7 +30,7 @@ local methods = {
 		Out = function(t: number): number
 			return t
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t
 		end,
 	},
@@ -42,7 +42,7 @@ local methods = {
 		Out = function(t: number): number
 			return t * (2 - t)
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t < .5 and 2 * t * t or -1 + (4 - 2 * t) * t
 		end,
 	},
@@ -55,7 +55,7 @@ local methods = {
 			t = t - 1
 			return t * t * t + 1
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t < .5 and 4 * t ^3 or (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
 		end,
 	},
@@ -68,7 +68,7 @@ local methods = {
 			t = t - 1
 			return 1 - t * t * t * t
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t < .5 and 8 * t * t * t * t or 1 - 8 * (t - 1) * (t - 1) * (t - 1) * (t - 1)
 		end,	
 	},
@@ -81,7 +81,7 @@ local methods = {
 			t = t - 1
 			return t * t * t * t * t + 1
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t < .5 and 16 * t * t * t * t * t or 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1)
 		end,	
 	},
@@ -93,7 +93,7 @@ local methods = {
 		Out = function(t: number): number
 			return sin(t * pi / 2)
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return -.5 * (cos(pi * t) - 1)
 		end,	
 	},
@@ -105,7 +105,7 @@ local methods = {
 		Out = function(t: number): number
 			return t == 1 and 1 or 1 - 2 ^ (-10 * t)
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			if t == 0 then return 0 end
 			if t == 1 then return 1 end
 			t = t * 2
@@ -121,7 +121,7 @@ local methods = {
 			t = t - 1
 			return sqrt(1 - t * t)
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			t = t * 2
 			return t < 1 and -.5 * (sqrt(1 - t * t) - 1) or .5 * (sqrt(1 - (t - 2) * (t - 2)) + 1)
 		end,	
@@ -137,7 +137,7 @@ local methods = {
 			local s = 1.70158
 			return t * t * ((s + 1) * t + s) + 1
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			t = t * 2
 			local s = 1.70158 * 1.525
 			return t < 1 and .5 * (t * t * ((s + 1) * t - s)) or .5 * ((t - 2) * (t - 2) * ((s + 1) * (t - 2) + s) + 2)
@@ -151,7 +151,7 @@ local methods = {
 		Out = function(t: number): number
 			return t == 0 and 0 or t == 1 and 1 or 2 ^ (-10 * t) * sin((t - .1) * 5 * pi) + 1
 		end,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			if t == 0 then return 0 end
 			if t == 1 then return 1 end
 			t = t * 2
@@ -162,14 +162,14 @@ local methods = {
 	Bounce = {
 		In = bounce_in,
 		Out = bounce_out,
-		Inout = function(t: number): number
+		InOut = function(t: number): number
 			return t < .5 and bounce_in(t * 2) * .5 or bounce_out(t * 2 - 1) * .5 + .5 
 		end,
 	},
 }
 
 export type method = "Linear" | "Quad" | "Cubic" | "Quart" | "Quint" | "Sine" | "Expo" | "Circ" | "Back" | "Elastic" | "Bounce"
-export type direction = "In" | "Out" | "In out"
+export type direction = "In" | "Out" | "InOut"
 export type target_type = Vector3 | Color3 | ColorSequence | CFrame | UDim2 | number | Vector2
 
 local types
@@ -203,8 +203,7 @@ types = {
 local active_easings = {}
 
 easing_lib.animate = function(object: Object, target: {target_type}, time: number, easing: {method: method, direction: direction}, callback: () -> ()?)
-	local direction = easing.direction:gsub(" ", "") or "In"
-	local ease = methods[easing.method][direction] or methods.Linear.In
+	local ease = methods[easing.method][easing.direction] or methods.Linear.In
 	local anim_id = #active_easings + 1
 	local progress = 0
 
