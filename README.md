@@ -16,10 +16,9 @@ https://github.com/user-attachments/assets/0c48be8a-9c33-4641-b2b7-4f596d740a24
 Argument | Type | Description | Example
 -------- | ---- | ----------- | ------- 
 **object** | object | Object that need to animate. | workspace.Part
-**property** | string | String of property that need animate. | "Size"
-**target** | Vector2, Vector3, Color3, UDim2, ColorSequence, CFrame, number | The target for animation that library should achieve. | part.Size + Vector3.new(100, 0, 0)
+**target** | Vector2, Vector3, Color3, UDim2, ColorSequence, CFrame, number | The table of targets for animation that library should achieve. | {Size = part.Size + Vector3.new(100, 0, 0)}
 **duration** | number | How long in seconds should the animation take to reach target. | 1
-**easing** | string | Which method should animate. All methods are streaming. | "bounce_in"
+**easing** | string | Which method and direction should animate. | {method = "Linear", direction = "In"}
 **callback** | callback | Function that runs when animation end. | function
 
 Animate object property to target, returns metatable for easing:cancel method.
@@ -36,4 +35,8 @@ Cancel animation.
 
 `easing.cancel_all()`
 
-Cancel all animations that currently works.
+Cancel a
+
+Uploading UI Easing.mp4…
+
+ll animations that currently works.
