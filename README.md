@@ -2,9 +2,9 @@
 ## Animation library that can replace default tweenservice.
 
 ## Example (Video):
-https://github.com/user-attachments/assets/13bc6457-5310-4606-9941-c1dd3ad97408
+https://github.com/user-attachments/assets/5f63ca88-3d8a-4f5f-a19f-6154e81fb4c6
 
-https://github.com/user-attachments/assets/0c48be8a-9c33-4641-b2b7-4f596d740a24
+https://github.com/user-attachments/assets/604a4824-26bc-4517-95b2-a37eb3deb2bb
 
 ## Documentation:
 ### Functions: 
@@ -35,8 +35,4 @@ Cancel animation.
 
 `easing.cancel_all()`
 
-Cancel a
-
-Uploading UI Easing.mp4…
-
-ll animations that currently works.
+Cancel all animations that currently works.
