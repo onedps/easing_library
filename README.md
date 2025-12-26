@@ -1,13 +1,16 @@
 # Easing Library
 ## Animation library that can replace default tweenservice.
 
+
 ## Example (Video):
 https://github.com/user-attachments/assets/5f63ca88-3d8a-4f5f-a19f-6154e81fb4c6
 
 https://github.com/user-attachments/assets/604a4824-26bc-4517-95b2-a37eb3deb2bb
 
+
 ## Documentation:
 ### Functions: 
+
 
 #### easing.animate
 
