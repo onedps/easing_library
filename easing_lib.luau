@@ -160,20 +160,15 @@ local types = {
 
 local active_easings = {}
 
-function easing_lib.animate(object: Object, property: string, target: number | UDim2 | Color3 | Vector3 | Vector2 | CFrame | ColorSequence, duration: number, easing: ease_method, callback: any)
-	local start_value = object[property]
-	local value_type = typeof(start_value)
-	local interpolate = types[value_type]
-
-	if not interpolate then
-		warn("Unsupported type: " .. value_type)
-		if callback then callback() end
-		return
-	end
-
+function easing_lib.animate(object: Object, target: {number | UDim2 | Color3 | Vector3 | Vector2 | CFrame | ColorSequence}, duration: number, easing: ease_method, callback: any)
 	local ease = methods[easing] or methods.linear
 	local anim_id = #active_easings + 1
 	local progress = 0
+	
+	local starts_value = {}
+	for k,v in target do
+		starts_value[k] = object[k]
+	end
 
 	local connection
 	connection = run_service.Heartbeat:Connect(function(dt)
@@ -182,14 +177,26 @@ function easing_lib.animate(object: Object, property: string, target: number | U
 		if progress >= 1 then
 			connection:Disconnect()
 			connection = nil
-			object[property] = target
+			for k,v in target do
+				object[k] = v
+			end
 			active_easings[anim_id] = nil
 			if callback then callback() end
 			return
 		end
 
-		object[property] = interpolate(start_value, target, ease(progress))
-		print(object.Name, object[property])
+		for k,v in target do
+			local value_type = typeof(starts_value[k])
+			local interpolate = types[value_type]
+
+			if not interpolate then
+				warn("Unsupported type: " .. value_type)
+				if callback then callback() end
+				return
+			end
+
+			object[k] = interpolate(starts_value[k], v, ease(progress))
+		end
 	end)
 
 	active_easings[anim_id] = connection
