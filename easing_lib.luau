@@ -26,103 +26,131 @@ local methods = {
 	linear = function(t: number): number
 		return t
 	end,
+
 	quad_in = function(t: number): number
 		return t * t
 	end,
+
 	quad_out = function(t: number): number
 		return t * (2 - t)
 	end,
+
 	quad_in_out = function(t: number): number
 		return t < 0.5 and 2 * t * t or -1 + (4 - 2 * t) * t
 	end,
+
 	cubic_in = function(t: number): number
 		return t * t * t
 	end,
+
 	cubic_out = function(t: number): number
 		t = t - 1
 		return t * t * t + 1
 	end,
+
 	cubic_in_out = function(t: number): number
 		return t < 0.5 and 4 * t ^3 or (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
 	end,
+
 	quart_in = function(t: number): number
 		return t * t * t * t
 	end,
+
 	quart_out = function(t: number): number
 		t = t - 1
 		return 1 - t * t * t * t
 	end,
+
 	quart_in_out = function(t: number): number
 		return t < 0.5 and 8 * t * t * t * t or 1 - 8 * (t - 1) * (t - 1) * (t - 1) * (t - 1)
 	end,
+
 	quint_in = function(t: number): number
 		return t * t * t * t * t
 	end,
+
 	quint_out = function(t: number): number
 		t = t - 1
 		return t * t * t * t * t + 1
 	end,
+
 	quint_in_out = function(t: number): number
 		return t < 0.5 and 16 * t * t * t * t * t or 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1)
 	end,
+
 	sine_in = function(t: number): number
 		return 1 - cos(t * pi / 2)
 	end,
+
 	sine_out = function(t: number): number
 		return sin(t * pi / 2)
 	end,
+
 	sine_in_out = function(t: number): number
 		return -0.5 * (cos(pi * t) - 1)
 	end,
+
 	expo_in = function(t: number): number
 		return t == 0 and 0 or 2 ^ (10 * (t - 1))
 	end,
+
 	expo_out = function(t: number): number
 		return t == 1 and 1 or 1 - 2 ^ (-10 * t)
 	end,
+
 	expo_in_out = function(t: number): number
 		if t == 0 then return 0 end
 		if t == 1 then return 1 end
 		t = t * 2
 		return t < 1 and 0.5 * 2 ^ (10 * (t - 1)) or 0.5 * (2 - 2 ^ (-10 * (t - 1)))
 	end,
+
 	circ_in = function(t: number): number
 		return 1 - sqrt(1 - t * t)
 	end,
+
 	circ_out = function(t: number): number
 		t = t - 1
 		return sqrt(1 - t * t)
 	end,
+
 	circ_in_out = function(t: number): number
 		t = t * 2
 		return t < 1 and -0.5 * (sqrt(1 - t * t) - 1) or 0.5 * (sqrt(1 - (t - 2) * (t - 2)) + 1)
 	end,
+
 	back_in = function(t: number): number
 		local s = 1.70158
 		return t * t * ((s + 1) * t - s)
 	end,
+
 	back_out = function(t: number): number
 		t = t - 1
 		local s = 1.70158
 		return t * t * ((s + 1) * t + s) + 1
 	end,
+
 	back_in_out = function(t: number): number
 		t = t * 2
 		local s = 1.70158 * 1.525
 		return t < 1 and 0.5 * (t * t * ((s + 1) * t - s)) or 0.5 * ((t - 2) * (t - 2) * ((s + 1) * (t - 2) + s) + 2)
 	end,
+
 	elastic_in = function(t: number): number
 		return t == 0 and 0 or t == 1 and 1 or -2 ^ (10 * (t - 1)) * sin((t - 1.1) * 5 * pi)
 	end,
+
 	elastic_out = function(t: number): number
 		return t == 0 and 0 or t == 1 and 1 or 2 ^ (-10 * t) * sin((t - 0.1) * 5 * pi) + 1
 	end,
+
 	elastic_in_out = function(t: number): number
 		if t == 0 then return 0 end
 		if t == 1 then return 1 end
 		t = t * 2
 		return t < 1 and -0.5 * 2 ^ (10 * (t - 1)) * sin((t - 1.1) * 5 * pi) or 0.5 * 2 ^ (-10 * (t - 1)) * sin((t - 1.1) * 5 * pi) + 1
 	end,
+
 	bounce_out = bounce_out,
 	bounce_in = bounce_in,
 	bounce_in_out = function(t: number): number
@@ -139,6 +167,7 @@ local types = {
 	Vector3 = function(a: Vector3, b: Vector3, t: number): Vector3 return a:Lerp(b, t) end,
 	Vector2 = function(a: Vector2, b: Vector2, t: number): Vector2 return a:Lerp(b, t) end,
 	CFrame = function(a: CFrame, b: CFrame, t: number): CFrame return a:Lerp(b, t) end,
+
 	ColorSequence = function(a: ColorSequence, b: ColorSequence, t: number): ColorSequence
 		if #a.Keypoints ~= #b.Keypoints then
 			error("ColorSequence must have the same number of keypoints")
